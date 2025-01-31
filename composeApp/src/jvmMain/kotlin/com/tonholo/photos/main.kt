@@ -11,7 +11,6 @@ import org.jetbrains.compose.reload.DevelopmentEntryPoint
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        alwaysOnTop = true,
         state = rememberWindowState(
             width = 600.dp,
             height = 800.dp,

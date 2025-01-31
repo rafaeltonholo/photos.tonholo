@@ -1,38 +1,39 @@
 package com.tonholo.photos
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.tonholo.photos.core.ui.theme.PhotosTheme
-import org.jetbrains.compose.reload.DevelopmentEntryPoint
-import org.jetbrains.compose.resources.painterResource
+import com.tonholo.photos.domain.model.Photo
+import com.tonholo.photos.feature.timeline.Timeline
+import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import photosbytonholo.composeapp.generated.resources.Res
-import photosbytonholo.composeapp.generated.resources.compose_multiplatform
+import kotlin.random.Random
 
 @Composable
 @Preview
 fun App() {
     PhotosTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+        Surface {
+            Timeline(
+                photos = remember {
+                    List(10) {
+                        Photo(
+                            url = listOf(),
+                            description = "Photo description $it",
+                            date = LocalDate(Random.nextInt(2000, 2025), 1, 1),
+                            hashtags = setOf(),
+                        )
+                    }.sortedByDescending { photo -> photo.date }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+            )
         }
     }
 }
