@@ -44,10 +44,10 @@ object Theme {
     /**
      * Retrieves the current [Typography] at the call site's position in the hierarchy.
      */
-    val typography: Typography
+    val typography: AppTypography
         @Composable
         @ReadOnlyComposable
-        get() = MaterialTheme.typography
+        get() = LocalAppTypography.current
 
     /**
      * Retrieves the current [Shapes] at the call site's position in the hierarchy.
@@ -68,7 +68,13 @@ fun PhotosTheme(
         else -> LightColorScheme to ExtendedLightColorScheme
     }
 
-    CompositionLocalProvider(LocalExtendedColorScheme provides extendedColorScheme) {
+    CompositionLocalProvider(
+        LocalExtendedColorScheme provides extendedColorScheme,
+        LocalAppTypography provides ExtendedTypograhy(
+            baseTypography = Typography,
+            handwrittenTypography = HandwrittenTypography,
+        )
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
