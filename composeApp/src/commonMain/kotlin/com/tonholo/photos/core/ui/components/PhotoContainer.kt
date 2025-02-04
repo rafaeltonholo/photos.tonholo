@@ -3,6 +3,7 @@ package com.tonholo.photos.core.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -11,15 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.tonholo.photos.core.ui.theme.Theme
 import com.tonholo.photos.core.ui.theme.preview.ThemedPreview
-import kotlinx.datetime.*
+import com.tonholo.photos.domain.model.Hashtag
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import photosbytonholo.composeapp.generated.resources.Res
@@ -31,7 +34,8 @@ fun PhotoContainer(
     description: String,
     date: LocalDate,
     modifier: Modifier = Modifier,
-    hashtags: Set<String> = emptySet(),
+    hashtags: Set<Hashtag> = emptySet(),
+    onHashtagClick: (Hashtag) -> Unit = {},
 ) {
     Card(
         modifier = modifier,
@@ -62,22 +66,10 @@ fun PhotoContainer(
                     style = Theme.typography.bodySmall,
                 )
                 if (hashtags.isNotEmpty()) {
-                    val hashtagColor = Theme.colorScheme.primary
-                    Text(
-                        text = remember(hashtags) {
-                            buildAnnotatedString {
-                                hashtags.forEach { hashtag ->
-                                    withStyle(SpanStyle(color = hashtagColor)) {
-                                        if (!hashtag.startsWith('#')) {
-                                            append("#")
-                                        }
-                                        append(hashtag)
-                                    }
-                                    append(" ")
-                                }
-                            }
-                        },
-                        style = Theme.typography.labelSmall,
+                    HashtagList(
+                        hashtags = hashtags,
+                        onClick = onHashtagClick,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
@@ -95,7 +87,11 @@ private fun Preview() {
             },
             description = "Lighthose -- Principe Edward Island, NS",
             date = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-            hashtags = setOf("landscapephotography", "outdoorphotography"),
+            hashtags = setOf(
+                Hashtag("landscapephotography", "https://www.google.com"),
+                Hashtag("naturephotography", "https://www.google.com"),
+                Hashtag("canada", "https://www.google.com")
+            ),
         )
     }
 }

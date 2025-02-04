@@ -2,6 +2,7 @@ package com.tonholo.photos.feature.timeline
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.tonholo.photos.core.ui.components.PhotoContainer
 import com.tonholo.photos.core.ui.theme.PhotosTheme
 import com.tonholo.photos.core.ui.theme.Theme
+import com.tonholo.photos.domain.model.Hashtag
 import com.tonholo.photos.domain.model.Photo
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
@@ -38,6 +40,8 @@ import kotlin.random.Random
 fun Timeline(
     photos: List<Photo>,
     modifier: Modifier = Modifier,
+    onPhotoClick: (Photo) -> Unit = {},
+    onHashtagClick: (Hashtag) -> Unit = {},
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -63,18 +67,18 @@ fun Timeline(
                             Image(
                                 painterResource(Res.drawable.lighthouse),
                                 contentDescription = null,
+                                modifier = Modifier.clickable { onPhotoClick(photo) },
                             )
                         },
                         description = photo.description,
                         date = photo.date,
-                        hashtags = remember(photo.hashtags) {
-                            photo.hashtags.map { it.value }.toSet()
-                        },
+                        hashtags = photo.hashtags,
                         modifier = Modifier
                             .padding(
                                 top = 24.dp,
                                 start = 4.dp,
                             ),
+                        onHashtagClick = onHashtagClick,
                     )
                 }
             }
