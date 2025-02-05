@@ -12,24 +12,32 @@ import com.tonholo.photos.domain.model.Hashtag
 import com.tonholo.photos.domain.model.Photo
 import com.tonholo.photos.feature.timeline.Timeline
 import kotlinx.datetime.LocalDate
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
 @Composable
-@Preview
-fun App() {
+fun App(modifier: Modifier = Modifier) {
     PhotosTheme {
-        Surface {
+        Surface(modifier = modifier) {
             Timeline(
                 photos = remember {
-                    List(10) {
+                    List(size = 10) {
                         Photo(
                             url = listOf(),
                             description = "Photo description $it",
-                            date = LocalDate(Random.nextInt(2000, 2025), 1, 1),
+                            date = LocalDate(
+                                year = Random.nextInt(from = 2000, until = 2025),
+                                monthNumber = 1,
+                                dayOfMonth = 1,
+                            ),
                             hashtags = setOf(
-                                Hashtag(value = "landscapephotography", link = "https://www.google.com"),
-                                Hashtag(value = "naturephotography", link = "https://www.google.com"),
+                                Hashtag(
+                                    value = "landscapephotography",
+                                    link = "https://www.google.com"
+                                ),
+                                Hashtag(
+                                    value = "naturephotography",
+                                    link = "https://www.google.com"
+                                ),
                                 Hashtag(value = "canada", link = "https://www.google.com"),
                                 Hashtag(value = "mountains", link = "https://www.google.com"),
                             ),

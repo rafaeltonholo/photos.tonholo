@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
@@ -10,6 +12,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.compose)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.compose)
     alias(libs.plugins.org.jetbrains.composeHotReload)
+    alias(libs.plugins.io.gitlab.arturbosch.detekt)
 }
 
 kotlin {
@@ -121,4 +124,41 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+detekt {
+    autoCorrect = true
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    // point to your custom config defining rules to run, overwriting default behavior
+    config.setFrom("${rootProject.rootDir}/config/detekt/detekt.yml")
+}
+
+dependencies {
+    detektPlugins(libs.io.gitlab.arturbosch.detekt.formatting)
+    detektPlugins(libs.io.nlopez.compose.rules.detekt)
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+        xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
+        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with GitHub Code Scanning
+        md.required.set(true) // simple Markdown format
+    }
+}
+
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = JavaVersion.VERSION_11.toString()
+    exclude {
+        setOf("build").any { dir ->
+            dir in it.file.absolutePath
+        }
+    }
+}
+
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = JavaVersion.VERSION_11.toString()
 }

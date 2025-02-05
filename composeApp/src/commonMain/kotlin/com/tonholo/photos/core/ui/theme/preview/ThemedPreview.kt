@@ -1,7 +1,13 @@
 package com.tonholo.photos.core.ui.theme.preview
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -12,9 +18,12 @@ import com.tonholo.photos.core.ui.theme.PhotosTheme
 import com.tonholo.photos.core.ui.theme.Theme
 
 @Composable
-fun ThemedPreview(content: @Composable () -> Unit) {
+fun ThemedPreview(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
@@ -27,7 +36,7 @@ fun ThemedPreview(content: @Composable () -> Unit) {
 @Composable
 private fun ColumnScope.ThemedPreview(
     darkTheme: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Text(if (darkTheme) "Dark mode:" else "Light mode:")
     PhotosTheme(darkTheme = darkTheme) {

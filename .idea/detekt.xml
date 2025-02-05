@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DetektPluginSettings">
+    <option name="configurationFiles">
+      <list>
+        <option value="$PROJECT_DIR$/config/detekt/detekt.yml" />
+      </list>
+    </option>
+    <option name="enableDetekt" value="true" />
+    <option name="enableForProjectResult" value="Accepted" />
+    <option name="pluginJars">
+      <list>
+        <option value="$PROJECT_DIR$/config/detekt/detekt-compose-0.4.22-all.jar" />
+      </list>
+    </option>
+  </component>
+</project>

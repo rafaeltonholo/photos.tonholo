@@ -55,13 +55,15 @@ fun PhotoContainer(
                 Text(text = description, style = Theme.typography.handwritten.titleLarge)
                 Text(
                     text = remember(date) {
-                        date.format(LocalDate.Format {
-                            monthName(MonthNames.ENGLISH_ABBREVIATED)
-                            char(value = ' ')
-                            dayOfMonth()
-                            chars(value = ", ")
-                            year()
-                        })
+                        date.format(
+                            LocalDate.Format {
+                                monthName(MonthNames.ENGLISH_ABBREVIATED)
+                                char(value = ' ')
+                                dayOfMonth()
+                                chars(value = ", ")
+                                year()
+                            },
+                        )
                     },
                     style = Theme.typography.bodySmall,
                 )

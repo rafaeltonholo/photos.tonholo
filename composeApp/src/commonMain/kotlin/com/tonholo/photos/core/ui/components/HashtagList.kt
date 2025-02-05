@@ -23,23 +23,23 @@ fun HashtagList(
 ) {
     Text(
         text = buildAnnotatedString {
-                hashtags.forEach { hashtag ->
-                    withLink(
-                        LinkAnnotation.Clickable(
-                            tag = hashtag.link,
-                            styles = TextLinkStyles(style = SpanStyle(color = color))
-                        ) {
-                            onClick(hashtag)
-                        },
+            hashtags.forEach { hashtag ->
+                withLink(
+                    LinkAnnotation.Clickable(
+                        tag = hashtag.link,
+                        styles = TextLinkStyles(style = SpanStyle(color = color))
                     ) {
-                        if (!hashtag.value.startsWith('#')) {
-                            append("#")
-                        }
-                        append(hashtag.value)
+                        onClick(hashtag)
+                    },
+                ) {
+                    if (!hashtag.value.startsWith('#')) {
+                        append("#")
                     }
-                    append(" ")
+                    append(hashtag.value)
                 }
-            },
+                append(" ")
+            }
+        },
         style = Theme.typography.labelSmall,
         modifier = modifier,
     )
