@@ -17,7 +17,7 @@ import kotlin.random.Random
 @Composable
 fun App(modifier: Modifier = Modifier) {
     PhotosTheme {
-        Surface(modifier = modifier) {
+        Surface(modifier = modifier.fillMaxSize()) {
             Timeline(
                 photos = remember {
                     List(size = 10) {

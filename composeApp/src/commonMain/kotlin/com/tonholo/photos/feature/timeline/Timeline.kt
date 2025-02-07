@@ -1,32 +1,30 @@
 package com.tonholo.photos.feature.timeline
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import com.tonholo.photos.core.ui.components.PhotoContainer
 import com.tonholo.photos.core.ui.theme.PhotosTheme
-import com.tonholo.photos.core.ui.theme.Theme
 import com.tonholo.photos.domain.model.Hashtag
 import com.tonholo.photos.domain.model.Photo
 import kotlinx.datetime.LocalDate
@@ -43,81 +41,107 @@ fun Timeline(
     onPhotoClick: (Photo) -> Unit = {},
     onHashtagClick: (Hashtag) -> Unit = {},
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier,
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val showSideBySide =
+        windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.widthIn(max = 700.dp),
     ) {
-        LazyColumn {
-            itemsIndexed(photos) { index, photo ->
-                val showYear by remember(index) {
-                    derivedStateOf {
-                        index == 0 || photo.date.year != photos[index - 1].date.year
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.height(intrinsicSize = IntrinsicSize.Min),
-                ) {
-                    TimelineIndicator(
-                        date = photo.date,
-                        showYear = showYear,
-                    )
-                    PhotoContainer(
-                        photo = {
-                            Image(
-                                painterResource(Res.drawable.lighthouse),
-                                contentDescription = null,
-                                modifier = Modifier.clickable { onPhotoClick(photo) },
-                            )
-                        },
-                        description = photo.description,
-                        date = photo.date,
-                        hashtags = photo.hashtags,
-                        modifier = Modifier
-                            .padding(
-                                top = 24.dp,
-                                start = 4.dp,
-                            ),
-                        onHashtagClick = onHashtagClick,
-                    )
+        itemsIndexed(photos) { index, photo ->
+            val showYear by remember(index) {
+                derivedStateOf {
+                    index == 0 || photo.date.year != photos[index - 1].date.year
                 }
             }
+            TimelineItem(
+                index = index,
+                photo = photo,
+                showSideBySide = showSideBySide,
+                showYear = showYear,
+                onPhotoClick = onPhotoClick,
+                onHashtagClick = onHashtagClick,
+            )
         }
     }
 }
 
 @Composable
-private fun TimelineIndicator(
-    date: LocalDate,
+private fun TimelineItem(
+    index: Int,
+    photo: Photo,
+    showSideBySide: Boolean,
+    showYear: Boolean,
+    onPhotoClick: (Photo) -> Unit,
+    onHashtagClick: (Hashtag) -> Unit,
     modifier: Modifier = Modifier,
-    showYear: Boolean = true,
 ) {
-    Column(
+    Row(
+        horizontalArrangement = Arrangement.aligned(Alignment.CenterHorizontally),
         modifier = modifier
-            .fillMaxHeight()
-            .then(if (showYear) Modifier else Modifier.padding(horizontal = 24.dp)),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .height(intrinsicSize = IntrinsicSize.Min)
+            .heightIn(max = 520.dp)
+            .widthIn(max = 1024.dp),
     ) {
-        if (showYear) {
-            Surface(
-                shape = RoundedCornerShape(percent = 100),
-                color = Theme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            ) {
-                Text(
-                    text = date.year.toString(),
-                    style = Theme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp),
-                )
+        val space = remember {
+            movableContentOf {
+                Spacer(modifier = Modifier.weight(1f))
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
         }
-        Spacer(
+
+        val photoContainer = rememberMovablePhotoContainer(
+            photo,
+            showYear,
+            onPhotoClick,
+            onHashtagClick,
+        )
+
+        if (showSideBySide) {
+            if (index % 2 == 0) {
+                photoContainer()
+            } else {
+                space()
+            }
+        }
+        TimelineIndicator(
+            date = photo.date,
+            showYear = showYear,
+        )
+        if (!showSideBySide || index % 2 != 0) {
+            photoContainer()
+        } else {
+            space()
+        }
+    }
+}
+
+@Composable
+private fun RowScope.rememberMovablePhotoContainer(
+    photo: Photo,
+    showYear: Boolean,
+    onPhotoClick: (Photo) -> Unit,
+    onHashtagClick: (Hashtag) -> Unit,
+) = remember(photo) {
+    movableContentOf {
+        PhotoContainer(
+            photo = {
+                Image(
+                    painterResource(Res.drawable.lighthouse),
+                    contentDescription = null,
+                    modifier = Modifier.clickable { onPhotoClick(photo) },
+                )
+            },
+            description = photo.description,
+            date = photo.date,
+            hashtags = photo.hashtags,
             modifier = Modifier
-                .width(1.dp)
                 .weight(1f)
-                .background(Theme.colorScheme.onBackground.copy(alpha = 0.2f))
+                .padding(
+                    top = if (showYear) 32.dp else 16.dp,
+                    start = 4.dp,
+                    bottom = 16.dp,
+                ),
+            onHashtagClick = onHashtagClick,
         )
     }
 }
