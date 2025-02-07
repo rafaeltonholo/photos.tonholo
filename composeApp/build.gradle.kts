@@ -37,7 +37,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        outputModuleName.set("composeApp")
+        moduleName = "composeApp"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -59,6 +59,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.io.ktor.client.android)
+        }
+        appleMain.dependencies {
+            implementation(libs.io.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -71,13 +75,20 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.org.jetbrains.kotlinx.datetime)
             implementation(libs.org.jetbrains.compose.material3.adaptive)
+            implementation(libs.io.ktor.client.core)
+            implementation(libs.io.coilKt.coil3.coil.compose)
+            implementation(libs.io.coilKt.coil3.coil.network.ktor3)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.org.jetbrains.kotlinx.coroutines.swing)
+            implementation(libs.io.ktor.client.java)
         }
     }
+//    compilerOptions {
+//        freeCompilerArgs.add("-Xwasm-use-traps-instead-of-exceptions")
+//    }
 }
 
 composeCompiler {

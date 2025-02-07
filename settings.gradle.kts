@@ -13,6 +13,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://packages.jetbrains.team/maven/p/firework/dev")
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
@@ -27,6 +28,7 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven("https://packages.jetbrains.team/maven/p/firework/dev")
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 

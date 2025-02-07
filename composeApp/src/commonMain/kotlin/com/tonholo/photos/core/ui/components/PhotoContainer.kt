@@ -1,17 +1,16 @@
 package com.tonholo.photos.core.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.tonholo.photos.core.ui.theme.Theme
 import com.tonholo.photos.core.ui.theme.preview.ThemedPreview
@@ -37,43 +36,40 @@ fun PhotoContainer(
     hashtags: Set<Hashtag> = emptySet(),
     onHashtagClick: (Hashtag) -> Unit = {},
 ) {
-    Card(
-        modifier = modifier,
-        shape = RectangleShape,
-        border = CardDefaults.outlinedCardBorder(),
+    Column(
+        modifier = modifier
+            .background(color = Theme.colorScheme.surfaceContainer)
+            .border(width = 1.dp, color = Theme.colorScheme.outline)
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp, bottom = 8.dp),
     ) {
+        photo()
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp, bottom = 8.dp),
+                .padding(top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            photo()
-            Column(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Text(text = description, style = Theme.typography.handwritten.titleLarge)
-                Text(
-                    text = remember(date) {
-                        date.format(
-                            LocalDate.Format {
-                                monthName(MonthNames.ENGLISH_ABBREVIATED)
-                                char(value = ' ')
-                                dayOfMonth()
-                                chars(value = ", ")
-                                year()
-                            },
-                        )
-                    },
-                    style = Theme.typography.bodySmall,
-                )
-                if (hashtags.isNotEmpty()) {
-                    HashtagList(
-                        hashtags = hashtags,
-                        onClick = onHashtagClick,
-                        modifier = Modifier.fillMaxWidth(),
+            Text(text = description, style = Theme.typography.handwritten.titleLarge)
+            Text(
+                text = remember(date) {
+                    date.format(
+                        LocalDate.Format {
+                            monthName(MonthNames.ENGLISH_ABBREVIATED)
+                            char(value = ' ')
+                            dayOfMonth()
+                            chars(value = ", ")
+                            year()
+                        },
                     )
-                }
+                },
+                style = Theme.typography.bodySmall,
+            )
+            if (hashtags.isNotEmpty()) {
+                HashtagList(
+                    hashtags = hashtags,
+                    onClick = onHashtagClick,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

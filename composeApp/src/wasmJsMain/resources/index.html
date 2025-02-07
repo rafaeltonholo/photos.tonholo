@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>photos by tonholo</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
+    <script>
+        window.process = {
+            env: {
+                "KTOR_LOG_LEVEL": "DEBUG",
+            },
+            release: {
+                name: "browser"
+            }
+        }
+    </script>
     <script type="application/javascript" src="composeApp.js"></script>
 </head>
 <body>

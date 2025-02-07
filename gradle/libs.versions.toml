@@ -13,8 +13,16 @@ kotlinx-datetime = "0.6.1"
 detekt = "1.23.7"
 detekt-compose-rules = "0.4.22"
 material3-adaptive = "1.1.0-alpha02"
+coil-compose = "3.1.0-SNAPSHOT"
+ktor = "3.0.3"
 
 [libraries]
+io-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+io-ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+io-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+io-ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
+io-coilKt-coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose",  version.ref = "coil-compose" }
+io-coilKt-coil3-coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3",  version.ref = "coil-compose" }
 io-gitlab-arturbosch-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 io-nlopez-compose-rules-detekt = { module = "io.nlopez.compose.rules:detekt", version.ref = "detekt-compose-rules" }
 org-jetbrains-kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
