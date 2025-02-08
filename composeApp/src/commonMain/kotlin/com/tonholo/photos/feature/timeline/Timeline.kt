@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import coil3.compose.AsyncImage
 import com.tonholo.photos.core.ui.components.PhotoContainer
+import com.tonholo.photos.core.ui.foundation.visualScroll
 import com.tonholo.photos.core.ui.theme.PhotosTheme
 import com.tonholo.photos.domain.model.Hashtag
 import com.tonholo.photos.domain.model.Photo
@@ -46,8 +48,11 @@ fun Timeline(
     val showSideBySide =
         windowSizeClass.containsWidthDp(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
+    val state = rememberLazyListState()
+
     LazyColumn(
-        modifier = modifier,
+        state = state,
+        modifier = modifier.visualScroll(state = state),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(24.dp),
     ) {
